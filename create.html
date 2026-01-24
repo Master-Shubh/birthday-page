@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Create Birthday Wish</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+  min-height:100vh;
+  background:linear-gradient(135deg,#ffdde1,#ee9ca7);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'Poppins',sans-serif;
+}
+.form-box{
+  background:#fff;
+  padding:25px;
+  border-radius:16px;
+  width:90%;
+  max-width:360px;
+  box-shadow:0 15px 30px rgba(0,0,0,.2);
+  text-align:center;
+}
+input,textarea{
+  width:100%;
+  margin:10px 0;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid #ddd;
+}
+button{
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:20px;
+  background:#c9184a;
+  color:#fff;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="form-box">
+  <h2>Create Birthday Wish 🎉</h2>
+  <input id="name" placeholder="Birthday Person Name">
+  <textarea id="msg" placeholder="Your Message"></textarea>
+  <button onclick="go()">Generate Wish</button>
+</div>
+
+<script>
+function go(){
+  const n=document.getElementById("name").value.trim();
+  const m=document.getElementById("msg").value.trim();
+  if(!n||!m){alert("Fill both fields");return;}
+  location.href=`index.html?name=${encodeURIComponent(n)}&msg=${encodeURIComponent(m)}`;
+}
+</script>
+
+</body>
+</html>
