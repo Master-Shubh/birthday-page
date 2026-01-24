@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Special Surprise 🎉</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins', sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background: linear-gradient(135deg,#ffdde1,#ee9ca7);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+/* TAP SCREEN */
+.tap-screen{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+  z-index:10;
+  cursor:pointer;
+}
+
+.tap-screen h1{color:#fff;font-size:28px;margin-bottom:15px;}
+.tap-screen p{color:#fff;font-size:16px;opacity:0.9;}
+.tap-icon{font-size:45px;margin-top:20px;animation:pulse 1.5s infinite;}
+
+@keyframes pulse{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.15);}
+  100%{transform:scale(1);}
+}
+
+/* CARD */
+.card{
+  position:relative;
+  background:#fff;
+  max-width:480px;
+  width:92%;
+  padding:42px 32px;
+  border-radius:22px;
+  box-shadow:0 30px 60px rgba(0,0,0,0.2);
+  text-align:center;
+  opacity:0;
+  transform:scale(0.8);
+  transition:0.6s ease;
+  overflow:hidden;
+}
+
+.card.show{opacity:1;transform:scale(1);}
+.card h1{font-size:30px;color:#c9184a;margin-bottom:8px;}
+.card h2{font-size:22px;color:#333;margin-bottom:20px;}
+.card p{font-size:15.5px;color:#555;line-height:1.85;margin-bottom:18px;}
+
+.signature{margin-top:25px;font-size:14px;color:#666;}
+.signature span{color:#c9184a;font-weight:600;}
+
+.card::before{
+  content:"Happy Birthday ✨ 🎂 💖 🎉";
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%) rotate(-20deg);
+  font-size:42px;
+  color:rgba(201,24,74,0.08);
+}
+
+.card *{position:relative;z-index:1;}
+
+/* CONFETTI */
+.confetti{
+  position:fixed;
+  top:-10px;
+  width:10px;
+  height:10px;
+  background:red;
+  animation:fall linear forwards;
+}
+
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(360deg);opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- AUDIO (same folder me song.mp3 rakho) -->
+<audio id="bgMusic" preload="auto">
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<!-- TAP SCREEN -->
+<div class="tap-screen" onclick="revealWish()">
+  <h1>🎁 A Special Surprise</h1>
+  <p>Tap anywhere to reveal your birthday wish</p>
+  <div class="tap-icon">👇</div>
+</div>
+
+<!-- CARD -->
+<div class="card" id="card">
+  <h1>Happy Birthday 🎂</h1>
+  <h2>Vishal 🚀 (Business Partner)</h2>
+
+  <p>
+    आज का दिन सिर्फ तुम्हारे जन्मदिन का नहीं,  
+    बल्कि उस जज़्बे और मेहनत का है  
+    जो तुम्हें सबसे अलग बनाती है 💪
+  </p>
+
+  <p>
+    एक दोस्त से बढ़कर,  
+    एक भरोसेमंद बिज़नेस पार्टनर की तरह  
+    हर कदम साथ देने के लिए धन्यवाद 🤝
+  </p>
+
+  <p>
+    दुआ है कि तुम्हारा बिज़नेस  
+    नई ऊँचाइयों तक जाए,  
+    हेल्थ, पैसा और सक्सेस  
+    हमेशा तुम्हारे साथ रहे ✨
+  </p>
+
+  <div class="signature">
+    Parivaar ki taraf se  
+    dher saari shubhkamnayein Sali ji 😍💐  
+    <br>— <span>Mr. Shubh</span>
+  </div>
+</div>
+
+<script>
+function revealWish(){
+  document.querySelector('.tap-screen').style.display='none';
+  document.getElementById('card').classList.add('show');
+
+  // 🎵 Play music on user interaction
+  const music = document.getElementById('bgMusic');
+  music.volume = 0.6;
+  music.play();
+
+  confettiBlast();
+}
+
+function confettiBlast(){
+  for(let i=0;i<120;i++){
+    const c=document.createElement('div');
+    c.className='confetti';
+    c.style.left=Math.random()*100+'vw';
+    c.style.background=`hsl(${Math.random()*360},100%,60%)`;
+    c.style.animationDuration=(2+Math.random()*3)+'s';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),5000);
+  }
+}
+</script>
+
+</body>
+</html>
