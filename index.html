@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Special Birthday Surprise 🎉</title>
+<title>Birthday Surprise 🎉</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -12,96 +12,106 @@
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family:'Poppins', sans-serif;
+  font-family:'Poppins',sans-serif;
 }
 
 body{
   min-height:100vh;
-  background:linear-gradient(135deg,#ffdde1,#ee9ca7);
   display:flex;
   align-items:center;
   justify-content:center;
-  overflow:hidden;
+  background:linear-gradient(135deg,#ffdde1,#ee9ca7);
 }
 
-/* FORM */
-.form-box{
-  background:#fff;
-  padding:25px;
-  border-radius:16px;
-  box-shadow:0 15px 30px rgba(0,0,0,0.2);
-  text-align:center;
-  width:90%;
-  max-width:360px;
+/* THEMES */
+body.pink{
+  background:linear-gradient(135deg,#ffdde1,#ee9ca7);
 }
-
-.form-box input,
-.form-box textarea{
-  width:100%;
-  margin:10px 0;
-  padding:10px;
-  border-radius:10px;
-  border:1px solid #ddd;
-  font-size:14px;
+body.blue{
+  background:linear-gradient(135deg,#3b82f6,#93c5fd);
 }
-
-.form-box button{
-  background:#c9184a;
-  color:#fff;
-  border:none;
-  padding:10px;
-  width:100%;
-  border-radius:20px;
-  cursor:pointer;
+body.dark{
+  background:linear-gradient(135deg,#0f172a,#020617);
 }
 
 /* TAP SCREEN */
 .tap-screen{
   position:absolute;
   inset:0;
-  display:none;
+  display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   text-align:center;
-  background:linear-gradient(135deg,#ff9a9e,#fad0c4);
-  z-index:10;
+  background:rgba(0,0,0,.25);
   cursor:pointer;
 }
 
-.tap-screen h1{color:#fff;font-size:28px;}
-.tap-screen p{color:#fff;opacity:0.9;}
-.tap-icon{font-size:45px;margin-top:20px;animation:pulse 1.5s infinite;}
+.tap-screen h1{
+  color:#fff;
+  font-size:26px;
+}
+.tap-icon{
+  font-size:40px;
+  margin-top:15px;
+  animation:pulse 1.4s infinite;
+}
 
 @keyframes pulse{
-  0%{transform:scale(1);}
-  50%{transform:scale(1.15);}
-  100%{transform:scale(1);}
+  0%{transform:scale(1)}
+  50%{transform:scale(1.15)}
+  100%{transform:scale(1)}
 }
 
 /* CARD */
 .card{
   display:none;
   background:#fff;
-  max-width:480px;
-  width:92%;
-  padding:42px 32px;
+  padding:36px 28px;
   border-radius:22px;
-  box-shadow:0 30px 60px rgba(0,0,0,0.2);
+  width:92%;
+  max-width:420px;
   text-align:center;
-  animation:scaleIn .6s ease;
+  box-shadow:0 30px 60px rgba(0,0,0,.2);
+  animation:scale .6s ease;
 }
 
-@keyframes scaleIn{
-  from{transform:scale(.8);opacity:0}
+@keyframes scale{
+  from{transform:scale(.85);opacity:0}
   to{transform:scale(1);opacity:1}
 }
 
-.card h1{color:#c9184a;font-size:30px;}
-.card p{color:#555;line-height:1.8;margin:15px 0;}
+.card h1{
+  color:#c9184a;
+  font-size:28px;
+}
 
-.signature{margin-top:20px;font-size:14px;color:#666;}
-.signature span{color:#c9184a;font-weight:600;}
+.card p{
+  margin:16px 0;
+  color:#555;
+  line-height:1.7;
+  font-size:15px;
+}
+
+/* SENDER */
+.sender-photo{
+  width:80px;
+  height:80px;
+  border-radius:50%;
+  object-fit:cover;
+  margin:10px auto;
+  display:none;
+}
+
+.signature{
+  margin-top:18px;
+  font-size:14px;
+  color:#666;
+}
+.signature span{
+  color:#c9184a;
+  font-weight:600;
+}
 
 /* CONFETTI */
 .confetti{
@@ -111,9 +121,27 @@ body{
   height:10px;
   animation:fall linear forwards;
 }
-
 @keyframes fall{
   to{transform:translateY(110vh) rotate(360deg);opacity:0;}
+}
+
+button{
+  margin-top:15px;
+  padding:10px 20px;
+  border:none;
+  border-radius:20px;
+  background:#c9184a;
+  color:#fff;
+  cursor:pointer;
+  box-shadow:0 8px 20px rgba(201,24,74,.35);
+}
+
+/* Desktop polish */
+@media (min-width:768px){
+  .card{
+    max-width:480px;
+    padding:48px 42px;
+  }
 }
 </style>
 </head>
@@ -121,81 +149,92 @@ body{
 <body>
 
 <!-- AUDIO -->
-<audio id="bgMusic" preload="auto">
+<audio id="bgMusic">
   <source src="song.mp3" type="audio/mpeg">
 </audio>
 
-<!-- FORM -->
-<div class="form-box" id="formBox">
-  <h2>Create Birthday Wish 🎉</h2>
-  <input id="nameInput" placeholder="Birthday Person Name">
-  <textarea id="msgInput" placeholder="Your Message"></textarea>
-  <button onclick="generateLink()">Generate Wish</button>
-</div>
-
 <!-- TAP SCREEN -->
-<div class="tap-screen" id="tapScreen" onclick="revealWish()">
-  <h1>🎁 Tap to Open</h1>
-  <p>Your surprise is ready</p>
+<div class="tap-screen" id="tap" onclick="openCard()">
+  <h1>🎁 Tap to open your surprise</h1>
   <div class="tap-icon">👇</div>
 </div>
 
 <!-- CARD -->
 <div class="card" id="card">
   <h1 id="wishName">Happy Birthday 🎂</h1>
+
+  <img id="senderPhoto" class="sender-photo">
+
   <p id="wishMsg"></p>
 
   <p>
-    May your life be filled with success, happiness  
-    and endless celebrations 🎉
+    May your life be filled with happiness,  
+    success and beautiful moments ✨
   </p>
 
   <div class="signature">
-    With love ❤️ <br>— <span>Mr. Shubh</span>
+    With love ❤️ <br>
+    — <span id="senderName">Someone special</span>
   </div>
 
-  <br>
   <button onclick="share()">📤 Share</button>
+  <button onclick="saveImage()">💾 Save Image</button>
 </div>
-
 <script>
-// URL DATA
-const params = new URLSearchParams(window.location.search);
-const name = params.get("name");
-const msg = params.get("msg");
+const p = new URLSearchParams(location.search);
 
-// IF LINK OPENED
-if(name && msg){
-  document.getElementById("formBox").style.display="none";
-  document.getElementById("tapScreen").style.display="flex";
-  document.getElementById("wishName").innerText="Happy Birthday 🎂 " + decodeURIComponent(name);
-  document.getElementById("wishMsg").innerText=decodeURIComponent(msg);
+const name   = p.get("name");
+const msg    = p.get("msg");
+const theme  = p.get("theme");
+const sender = p.get("sender");
+const photo  = p.get("photo");
+
+/* Invalid link */
+if(!name || !msg){
+  document.body.innerHTML =
+    "<h2 style='color:#fff'>Invalid or incomplete link</h2>";
 }
 
-// CREATE LINK
-function generateLink(){
-  const n=document.getElementById("nameInput").value.trim();
-  const m=document.getElementById("msgInput").value.trim();
-  if(!n||!m){alert("Fill both fields");return;}
-  const url=`${location.origin}${location.pathname}?name=${encodeURIComponent(n)}&msg=${encodeURIComponent(m)}`;
-  location.href=url;
+/* Set text */
+document.getElementById("wishName").innerText =
+  "Happy Birthday 🎂 " + decodeURIComponent(name);
+
+document.getElementById("wishMsg").innerText =
+  decodeURIComponent(msg);
+
+/* Sender name */
+if(sender){
+  document.getElementById("senderName").innerText =
+    decodeURIComponent(sender);
 }
 
-// REVEAL
-function revealWish(){
-  document.getElementById("tapScreen").style.display="none";
+/* Sender photo */
+if(photo){
+  const img = document.getElementById("senderPhoto");
+  img.src = decodeURIComponent(photo);
+  img.style.display = "block";
+}
+
+/* Theme */
+if(theme){
+  document.body.className = theme;
+}
+
+/* Open card */
+function openCard(){
+  document.getElementById("tap").style.display="none";
   document.getElementById("card").style.display="block";
 
-  const music=document.getElementById("bgMusic");
-  music.volume=.6;
-  music.play();
+  const music = document.getElementById("bgMusic");
+  music.volume = 0.6;
+  music.play().catch(()=>{});
 
   confetti();
 }
 
-// CONFETTI
+/* Confetti */
 function confetti(){
-  for(let i=0;i<120;i++){
+  for(let i=0;i<100;i++){
     const c=document.createElement("div");
     c.className="confetti";
     c.style.left=Math.random()*100+"vw";
@@ -206,11 +245,30 @@ function confetti(){
   }
 }
 
-// SHARE
+/* Share */
 function share(){
-  window.open("https://wa.me/?text="+encodeURIComponent("🎉 Special Birthday Wish:\n"+location.href),"_blank");
+  window.open(
+    "https://wa.me/?text=" +
+    encodeURIComponent("🎉 A special birthday wish for you:\n" + location.href),
+    "_blank"
+  );
 }
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+function saveImage(){
+  const card = document.getElementById("card");
 
+  html2canvas(card, {
+    scale: 2,        // HD quality
+    useCORS: true
+  }).then(canvas => {
+    const link = document.createElement("a");
+    link.download = "birthday-wish.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  });
+}
+</script>
 </body>
 </html>
