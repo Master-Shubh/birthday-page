@@ -40,6 +40,97 @@ button{
   color:#fff;
   cursor:pointer;
 }
+.themes{
+  margin:10px 0;
+  text-align:left;
+  font-size:14px;
+}
+.themes label{
+  display:block;
+  margin:6px 0;
+  cursor:pointer;
+}
+.theme-section{
+  margin:15px 0;
+  text-align:left;
+}
+
+.theme-section p{
+  font-size:14px;
+  margin-bottom:8px;
+}
+
+.theme-cards{
+  display:flex;
+  gap:10px;
+}
+
+.theme-card{
+  flex:1;
+  height:70px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  color:#fff;
+  font-weight:600;
+  font-size:14px;
+  border:2px solid transparent;
+  transition:.3s;
+}
+
+/* Themes */
+.theme-card.pink{
+  background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+}
+
+.theme-card.blue{
+  background:linear-gradient(135deg,#3b82f6,#93c5fd);
+}
+
+.theme-card.dark{
+  background:linear-gradient(135deg,#0f172a,#020617);
+}
+
+/* Active */
+.theme-card.active{
+  border-color:#000;
+  box-shadow:0 0 0 3px rgba(0,0,0,0.15);
+}
+.preview-box{
+  margin-top:20px;
+  text-align:center;
+}
+
+.preview-title{
+  font-size:14px;
+  margin-bottom:8px;
+  color:#333;
+}
+
+.preview-card{
+  border-radius:16px;
+  padding:18px;
+  color:#fff;
+  min-height:120px;
+  transition:.3s;
+  box-shadow:0 12px 25px rgba(0,0,0,0.2);
+}
+
+/* Preview themes */
+.preview-card.pink{
+  background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+}
+
+.preview-card.blue{
+  background:linear-gradient(135deg,#3b82f6,#93c5fd);
+}
+
+.preview-card.dark{
+  background:linear-gradient(135deg,#0f172a,#020617);
+}
+
 </style>
 </head>
 
@@ -47,17 +138,112 @@ button{
 
 <div class="form-box">
   <h2>Create Birthday Wish 🎉</h2>
-  <input id="name" placeholder="Birthday Person Name">
-  <textarea id="msg" placeholder="Your Message"></textarea>
+
+  <input
+    type="text"
+    id="name"
+    placeholder="Birthday Person Name"
+    oninput="updatePreview()"
+  />
+
+  <textarea
+    id="msg"
+    placeholder="Your Message"
+    oninput="updatePreview()"
+  ></textarea>
+<input
+  type="text"
+  id="sender"
+  placeholder="Your Name (Sender)"
+/>
+
+<input
+  type="file"
+  id="photo"
+  accept="image/*"
+/>
+
+  <!-- THEME SELECTION -->
+  <div class="theme-section">
+    <p>Select Theme 🎨</p>
+
+    <div class="theme-cards">
+      <div class="theme-card pink active" onclick="selectTheme('pink', this)">
+        Pink
+      </div>
+      <div class="theme-card blue" onclick="selectTheme('blue', this)">
+        Blue
+      </div>
+      <div class="theme-card dark" onclick="selectTheme('dark', this)">
+        Dark
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE PREVIEW -->
+  <div class="preview-box">
+    <p class="preview-title">Live Preview 👀</p>
+
+    <div class="preview-card pink" id="previewCard">
+      <h3 id="previewName">Happy Birthday 🎂 Name</h3>
+      <p id="previewMsg">Your message will appear here ✨</p>
+    </div>
+  </div>
+
   <button onclick="go()">Generate Wish</button>
 </div>
 
+<input type="hidden" id="themeInput" value="pink">
+
+
 <script>
 function go(){
-  const n=document.getElementById("name").value.trim();
-  const m=document.getElementById("msg").value.trim();
-  if(!n||!m){alert("Fill both fields");return;}
-  location.href=`index.html?name=${encodeURIComponent(n)}&msg=${encodeURIComponent(m)}`;
+  const name   = document.getElementById("name").value.trim();
+  const msg    = document.getElementById("msg").value.trim();
+  const sender = document.getElementById("sender").value.trim();
+  const theme  = document.getElementById("themeInput").value;
+  const photoFile = document.getElementById("photo").files[0];
+
+  if(!name || !msg || !sender){
+    alert("Please fill name, message and sender");
+    return;
+  }
+
+  // Photo handle
+  if(photoFile){
+    const reader = new FileReader();
+    reader.onload = function(){
+      redirect(reader.result);
+    };
+    reader.readAsDataURL(photoFile);
+  } else {
+    redirect("");
+  }
+
+  function redirect(photoData){
+    const url =
+      "index.html" +
+      "?name="   + encodeURIComponent(name) +
+      "&msg="    + encodeURIComponent(msg) +
+      "&sender=" + encodeURIComponent(sender) +
+      "&theme="  + theme +
+      "&photo="  + encodeURIComponent(photoData);
+
+    window.location.href = url;
+  }
+}
+</script>
+<script>
+function selectTheme(theme, el){
+  document.getElementById("themeInput").value = theme;
+
+  document.querySelectorAll(".theme-card")
+    .forEach(c => c.classList.remove("active"));
+
+  el.classList.add("active");
+
+  const preview = document.getElementById("previewCard");
+  preview.className = "preview-card " + theme;
 }
 </script>
 
