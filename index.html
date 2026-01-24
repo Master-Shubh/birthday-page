@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Special Surprise 🎉</title>
+<title>Special Birthday Surprise 🎉</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -17,18 +17,49 @@
 
 body{
   min-height:100vh;
-  background: linear-gradient(135deg,#ffdde1,#ee9ca7);
+  background:linear-gradient(135deg,#ffdde1,#ee9ca7);
   display:flex;
   align-items:center;
   justify-content:center;
   overflow:hidden;
 }
 
+/* FORM */
+.form-box{
+  background:#fff;
+  padding:25px;
+  border-radius:16px;
+  box-shadow:0 15px 30px rgba(0,0,0,0.2);
+  text-align:center;
+  width:90%;
+  max-width:360px;
+}
+
+.form-box input,
+.form-box textarea{
+  width:100%;
+  margin:10px 0;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid #ddd;
+  font-size:14px;
+}
+
+.form-box button{
+  background:#c9184a;
+  color:#fff;
+  border:none;
+  padding:10px;
+  width:100%;
+  border-radius:20px;
+  cursor:pointer;
+}
+
 /* TAP SCREEN */
 .tap-screen{
   position:absolute;
   inset:0;
-  display:flex;
+  display:none;
   flex-direction:column;
   align-items:center;
   justify-content:center;
@@ -38,8 +69,8 @@ body{
   cursor:pointer;
 }
 
-.tap-screen h1{color:#fff;font-size:28px;margin-bottom:15px;}
-.tap-screen p{color:#fff;font-size:16px;opacity:0.9;}
+.tap-screen h1{color:#fff;font-size:28px;}
+.tap-screen p{color:#fff;opacity:0.9;}
 .tap-icon{font-size:45px;margin-top:20px;animation:pulse 1.5s infinite;}
 
 @keyframes pulse{
@@ -50,7 +81,7 @@ body{
 
 /* CARD */
 .card{
-  position:relative;
+  display:none;
   background:#fff;
   max-width:480px;
   width:92%;
@@ -58,30 +89,19 @@ body{
   border-radius:22px;
   box-shadow:0 30px 60px rgba(0,0,0,0.2);
   text-align:center;
-  opacity:0;
-  transform:scale(0.8);
-  transition:0.6s ease;
-  overflow:hidden;
+  animation:scaleIn .6s ease;
 }
 
-.card.show{opacity:1;transform:scale(1);}
-.card h1{font-size:30px;color:#c9184a;margin-bottom:8px;}
-.card h2{font-size:22px;color:#333;margin-bottom:20px;}
-.card p{font-size:15.5px;color:#555;line-height:1.85;margin-bottom:18px;}
+@keyframes scaleIn{
+  from{transform:scale(.8);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
 
-.signature{margin-top:25px;font-size:14px;color:#666;}
+.card h1{color:#c9184a;font-size:30px;}
+.card p{color:#555;line-height:1.8;margin:15px 0;}
+
+.signature{margin-top:20px;font-size:14px;color:#666;}
 .signature span{color:#c9184a;font-weight:600;}
-
-.card::before{
-  content:"Happy Birthday ✨ 🎂 💖 🎉";
-  position:absolute;
-  top:50%;left:50%;
-  transform:translate(-50%,-50%) rotate(-20deg);
-  font-size:42px;
-  color:rgba(201,24,74,0.08);
-}
-
-.card *{position:relative;z-index:1;}
 
 /* CONFETTI */
 .confetti{
@@ -89,7 +109,6 @@ body{
   top:-10px;
   width:10px;
   height:10px;
-  background:red;
   animation:fall linear forwards;
 }
 
@@ -101,72 +120,95 @@ body{
 
 <body>
 
-<!-- AUDIO (same folder me song.mp3 rakho) -->
+<!-- AUDIO -->
 <audio id="bgMusic" preload="auto">
   <source src="song.mp3" type="audio/mpeg">
 </audio>
 
+<!-- FORM -->
+<div class="form-box" id="formBox">
+  <h2>Create Birthday Wish 🎉</h2>
+  <input id="nameInput" placeholder="Birthday Person Name">
+  <textarea id="msgInput" placeholder="Your Message"></textarea>
+  <button onclick="generateLink()">Generate Wish</button>
+</div>
+
 <!-- TAP SCREEN -->
-<div class="tap-screen" onclick="revealWish()">
-  <h1>🎁 A Special Surprise</h1>
-  <p>Tap anywhere to reveal your birthday wish</p>
+<div class="tap-screen" id="tapScreen" onclick="revealWish()">
+  <h1>🎁 Tap to Open</h1>
+  <p>Your surprise is ready</p>
   <div class="tap-icon">👇</div>
 </div>
 
 <!-- CARD -->
 <div class="card" id="card">
-  <h1>Happy Birthday 🎂</h1>
-  <h2>Gautam 🚀 Yadav</h2>
+  <h1 id="wishName">Happy Birthday 🎂</h1>
+  <p id="wishMsg"></p>
 
   <p>
-    आज का दिन सिर्फ तुम्हारे जन्मदिन का नहीं,  
-    बल्कि उस जज़्बे और मेहनत का है  
-    जो तुम्हें सबसे अलग बनाती है 💪
-  </p>
-
-  <p>
-    एक दोस्त से बढ़कर,  
-    एक भरोसेमंद बिज़नेस पार्टनर की तरह  
-    हर कदम साथ देने के लिए धन्यवाद 🤝
-  </p>
-
-  <p>
-    दुआ है कि तुम्हारा बिज़नेस  
-    नई ऊँचाइयों तक जाए,  
-    हेल्थ, पैसा और सक्सेस  
-    हमेशा तुम्हारे साथ रहे ✨
+    May your life be filled with success, happiness  
+    and endless celebrations 🎉
   </p>
 
   <div class="signature">
-    Parivaar ki taraf se  
-    dher saari shubhkamnayein Gutam Babu😍💐  
-    <br>— <span>Mr. Shubh</span>
+    With love ❤️ <br>— <span>Mr. Shubh</span>
   </div>
+
+  <br>
+  <button onclick="share()">📤 Share</button>
 </div>
 
 <script>
-function revealWish(){
-  document.querySelector('.tap-screen').style.display='none';
-  document.getElementById('card').classList.add('show');
+// URL DATA
+const params = new URLSearchParams(window.location.search);
+const name = params.get("name");
+const msg = params.get("msg");
 
-  // 🎵 Play music on user interaction
-  const music = document.getElementById('bgMusic');
-  music.volume = 0.6;
-  music.play();
-
-  confettiBlast();
+// IF LINK OPENED
+if(name && msg){
+  document.getElementById("formBox").style.display="none";
+  document.getElementById("tapScreen").style.display="flex";
+  document.getElementById("wishName").innerText="Happy Birthday 🎂 " + decodeURIComponent(name);
+  document.getElementById("wishMsg").innerText=decodeURIComponent(msg);
 }
 
-function confettiBlast(){
+// CREATE LINK
+function generateLink(){
+  const n=document.getElementById("nameInput").value.trim();
+  const m=document.getElementById("msgInput").value.trim();
+  if(!n||!m){alert("Fill both fields");return;}
+  const url=`${location.origin}${location.pathname}?name=${encodeURIComponent(n)}&msg=${encodeURIComponent(m)}`;
+  location.href=url;
+}
+
+// REVEAL
+function revealWish(){
+  document.getElementById("tapScreen").style.display="none";
+  document.getElementById("card").style.display="block";
+
+  const music=document.getElementById("bgMusic");
+  music.volume=.6;
+  music.play();
+
+  confetti();
+}
+
+// CONFETTI
+function confetti(){
   for(let i=0;i<120;i++){
-    const c=document.createElement('div');
-    c.className='confetti';
-    c.style.left=Math.random()*100+'vw';
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
     c.style.background=`hsl(${Math.random()*360},100%,60%)`;
-    c.style.animationDuration=(2+Math.random()*3)+'s';
+    c.style.animationDuration=(2+Math.random()*3)+"s";
     document.body.appendChild(c);
     setTimeout(()=>c.remove(),5000);
   }
+}
+
+// SHARE
+function share(){
+  window.open("https://wa.me/?text="+encodeURIComponent("🎉 Special Birthday Wish:\n"+location.href),"_blank");
 }
 </script>
 
