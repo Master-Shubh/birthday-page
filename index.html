@@ -41,10 +41,7 @@ body.dark{background:linear-gradient(135deg,#0f172a,#020617);}
   cursor:pointer;
 }
 
-.tap-screen h1{
-  color:#fff;
-  font-size:26px;
-}
+.tap-screen h1{color:#fff;font-size:26px;}
 .tap-icon{
   font-size:40px;
   margin-top:15px;
@@ -75,11 +72,7 @@ body.dark{background:linear-gradient(135deg,#0f172a,#020617);}
   to{transform:scale(1);opacity:1}
 }
 
-.card h1{
-  color:#c9184a;
-  font-size:28px;
-}
-
+.card h1{color:#c9184a;font-size:28px;}
 .card p{
   margin:16px 0;
   color:#555;
@@ -87,16 +80,7 @@ body.dark{background:linear-gradient(135deg,#0f172a,#020617);}
   font-size:15px;
 }
 
-/* SENDER */
-.sender-photo{
-  width:80px;
-  height:80px;
-  border-radius:50%;
-  object-fit:cover;
-  margin:10px auto;
-  display:none;
-}
-
+/* SIGNATURE */
 .signature{
   margin-top:18px;
   font-size:14px;
@@ -141,11 +125,6 @@ button{
 
 <body>
 
-<!-- AUDIO -->
-<audio id="bgMusic" preload="auto">
-  <source src="song.mp3" type="audio/mpeg">
-</audio>
-
 <!-- TAP SCREEN -->
 <div class="tap-screen" id="tap" onclick="openCard()">
   <h1>🎁 Tap to open your surprise</h1>
@@ -155,8 +134,6 @@ button{
 <!-- CARD -->
 <div class="card" id="card">
   <h1 id="wishName">Happy Birthday 🎂</h1>
-
-  <img id="senderPhoto" class="sender-photo">
 
   <p id="wishMsg"></p>
 
@@ -171,25 +148,25 @@ button{
   </div>
 
   <button onclick="share()">📤 Share</button>
-  <button onclick="saveImage()">💾 Save Image</button>
 </div>
 
 <script>
-const p = new URLSearchParams(location.search);
+/* 1️⃣ READ PARAMS */
+const params = new URLSearchParams(location.search);
 
-const name   = p.get("name");
-const msg    = p.get("msg");
-const theme  = p.get("theme");
-const sender = p.get("sender");
+const name   = params.get("name");
+const msg    = params.get("msg");
+const sender = params.get("sender");
+const theme  = params.get("theme");
 
-/* INVALID LINK */
+/* 2️⃣ VALIDATE */
 if(!name || !msg){
   document.body.innerHTML =
     "<h2 style='color:white'>Invalid or incomplete link</h2>";
   throw new Error("Invalid link");
 }
 
-/* SET CONTENT */
+/* 3️⃣ SET CONTENT */
 document.getElementById("wishName").innerText =
   "Happy Birthday 🎂 " + name;
 
@@ -204,18 +181,13 @@ if(theme){
   document.body.classList.add(theme);
 }
 
+/* 4️⃣ 🔥 HIDE URL PARAMS (MAIN FEATURE) */
+history.replaceState({}, document.title, location.pathname);
+
 /* OPEN CARD */
 function openCard(){
   document.getElementById("tap").style.display="none";
   document.getElementById("card").style.display="block";
-
-  const music = document.getElementById("bgMusic");
-  music.volume = 0.6;
-
-  document.body.addEventListener("click",()=>{
-    music.play().catch(()=>{});
-  },{once:true});
-
   confetti();
 }
 
@@ -232,30 +204,13 @@ function confetti(){
   }
 }
 
-/* ✅ WHATSAPP SHARE – ONLY GITHUB PAGE LINK */
+/* SHARE – CLEAN GITHUB LINK ONLY */
 function share(){
-  // 🔴 APNA GITHUB PAGES LINK YAHA DAALO
-  const githubPageLink = "https://itsmrshubh.github.io/birthday/";
+  const cleanLink = location.origin + location.pathname;
 
   window.location.href =
     "https://api.whatsapp.com/send?text=" +
-    encodeURIComponent(githubPageLink);
-}
-</script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-<script>
-function saveImage(){
-  html2canvas(document.getElementById("card"),{
-    scale:2,
-    useCORS:true
-  }).then(canvas=>{
-    const a=document.createElement("a");
-    a.download="birthday-wish.png";
-    a.href=canvas.toDataURL("image/png");
-    a.click();
-  });
+    encodeURIComponent(cleanLink);
 }
 </script>
 
